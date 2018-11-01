@@ -62,11 +62,10 @@ export class Typegoose {
 
   private buildSchema<T>(t: T, name: string, schemaOptions, sch?: mongoose.Schema) {
     const Schema = mongoose.Schema;
+    const customSchemaOptions = Reflect.getMetadata('typegoose:schema', t) || {};
 
     if (!sch) {
-      sch = schemaOptions ?
-        new Schema(schema[name], schemaOptions) :
-        new Schema(schema[name]);
+      sch = new Schema(schema[name], {...customSchemaOptions, ...schemaOptions || {}});
     } else {
       sch.add(schema[name]);
     }
